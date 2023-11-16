@@ -83,7 +83,7 @@ public class GridOperationManager : MonoBehaviour
 
             currentGridManager.gridDataManager.gridObjects[gridPosition.x, gridPosition.y] = currentObject;
 
-            GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[3, 3];
+            GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[3,3];
 
             for (int i = -1; i <= 1; i++)
             {
@@ -98,6 +98,14 @@ public class GridOperationManager : MonoBehaviour
 
                 if (matrixObjects != null)
                 {
+
+                    GridPlaceableObject[,] matrixObjects4 = new GridPlaceableObject[4, 4];
+                    matrixObjects4 = currentGridManager.gridDataManager.Check4x4MatrixFrom3x3(matrixObjects);
+                    if (matrixObjects4 != null)
+                    {
+                        matrixObjects = new GridPlaceableObject[4, 4];
+                        matrixObjects = matrixObjects4;
+                    }
                     break;
                 }
             }
@@ -161,12 +169,6 @@ public class GridOperationManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && CanPlace())
             ConfirmPlacement();
 
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-
-        //    currentGridManager.gridDataManager.UpdateWithoutCoverGridState(unlockRadius);
-        //    unlockRadius -= 1;
-        //}
     }
 
     private void ExitPlacementMode()

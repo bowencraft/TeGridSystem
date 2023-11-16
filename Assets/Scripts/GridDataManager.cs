@@ -106,10 +106,78 @@ public class GridDataManager : SerializedMonoBehaviour
                 }
                 count++;
                 matrixObjects[i + 1, j + 1] = gridObjects[newRow, newCol];
+                
+                // 你可以使用 gridObjects[newRow, newCol].gridPosition 获得一个vector2int格式的object坐标位置
             }
         }
 
         return matrixObjects; // 所有单元格都是 Occupied，返回对象矩阵
     }
+
+    public GridPlaceableObject[,] Check4x4MatrixFrom3x3(GridPlaceableObject[,] i3x3Matrix)
+    {
+        if (i3x3Matrix.GetLength(0) != 3 || i3x3Matrix.GetLength(1) != 3)
+        {
+            // 输入矩阵不是 3x3 大小
+            return null;
+        }
+
+        // 获取中心对象的网格位置
+        Vector2Int centerPosition = i3x3Matrix[1, 1].gridPosition;
+        int row = centerPosition.x;
+        int col = centerPosition.y;
+
+        // 检查四个方向的 4x4 矩阵
+        for (int xOffset = -1; xOffset <= 0; xOffset++)
+        {
+            for (int yOffset = -1; yOffset <= 0; yOffset++)
+            {
+                if (Is4x4MatrixOccupied(row + xOffset, col + yOffset))
+                {
+                    return Extract4x4Matrix(row + xOffset, col + yOffset);
+                }
+            }
+        }
+
+        return null; // 没有找到完整的 4x4 矩阵
+    }
+
+    private bool Is4x4MatrixOccupied(int startRow, int startCol)
+    {
+        if (startRow < 0 || startCol < 0 || startRow > gridStates.GetLength(0) - 4 || startCol > gridStates.GetLength(1) - 4)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (gridStates[startRow + i, startCol + j] != GridState.Occupied)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private GridPlaceableObject[,] Extract4x4Matrix(int startRow, int startCol)
+    {
+        GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[4, 4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                matrixObjects[i, j] = gridObjects[startRow + i, startCol + j];
+            }
+        }
+
+        return matrixObjects;
+    }
+
+
 
 }
