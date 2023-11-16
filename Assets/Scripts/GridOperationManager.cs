@@ -83,37 +83,14 @@ public class GridOperationManager : MonoBehaviour
 
             currentGridManager.gridDataManager.gridObjects[gridPosition.x, gridPosition.y] = currentObject;
 
-            GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[3,3];
+            //GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[3,3];
 
-            for (int i = -1; i <= 1; i++)
-            {
-                for (int j = -1; j <= 1; j++)
-                {
-                    matrixObjects = currentGridManager.gridDataManager.Check3x3Matrix(gridPosition.x + i, gridPosition.y + j);
-                    //Debug.Log("Click On:" + gridPosition+  " " + (gridPosition.x + i) + " " + (gridPosition.y + j));
-                    if (matrixObjects != null) {
-                        break;
-                    }
-                }
-
-                if (matrixObjects != null)
-                {
-
-                    GridPlaceableObject[,] matrixObjects4 = new GridPlaceableObject[4, 4];
-                    matrixObjects4 = currentGridManager.gridDataManager.Check4x4MatrixFrom3x3(matrixObjects);
-                    if (matrixObjects4 != null)
-                    {
-                        matrixObjects = new GridPlaceableObject[4, 4];
-                        matrixObjects = matrixObjects4;
-                    }
-                    break;
-                }
-            }
+            GridPlaceableObject[,] matrixObjects = currentGridManager.gridDataManager.CheckMatrix(gridPosition.x, gridPosition.y);
 
 
             if (matrixObjects != null)
             {
-                Debug.Log("Existed");
+                Debug.Log(matrixObjects.Length);
                 for (int i =0; i< matrixObjects.GetLength(0); i++)
                 {
                     for (int j = 0; j < matrixObjects.GetLength(0); j++)
@@ -127,11 +104,6 @@ public class GridOperationManager : MonoBehaviour
                 }
                 currentGridManager.unlockableBorder -= 1;
                 currentGridManager.gridDataManager.UpdateWithoutCoverGridState(currentGridManager.unlockableBorder);
-            }
-            else
-            {
-                Debug.Log("Not Existed");
-                // 不满足 3x3 Occupied 条件
             }
 
 

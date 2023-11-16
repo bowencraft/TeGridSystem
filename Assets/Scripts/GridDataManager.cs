@@ -80,78 +80,49 @@ public class GridDataManager : SerializedMonoBehaviour
         return gridStates[x, y];
     }
 
-
-    public GridPlaceableObject[,] Check3x3Matrix(int row, int col)
+    public GridPlaceableObject[,] CheckMatrix(int row, int col)
     {
-        if (row < 1 || col < 1 || row >= gridStates.GetLength(0) - 1 || col >= gridStates.GetLength(1) - 1)
-        {
-            // 超出边界或不能形成一个完整的 3x3 矩阵
-            return null;
-        }
+        int maxSize = Math.Min(gridStates.GetLength(0), gridStates.GetLength(1));
+        GridPlaceableObject[,] largestMatrix = null;
+        int largestSize = 0;
 
-        GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[3, 3];
-        int count = 0;
-
-        for (int i = -1; i <= 1; i++)
+        for (int startRow = 0; startRow < gridStates.GetLength(0); startRow++)
         {
-            for (int j = -1; j <= 1; j++)
+            for (int startCol = 0; startCol < gridStates.GetLength(1); startCol++)
             {
-                int newRow = row + i;
-                int newCol = col + j;
-
-                if (gridStates[newRow, newCol] != GridState.Occupied)
+                for (int size = 3; size <= maxSize; size++)
                 {
-                    // 如果任何单元格不是 Occupied，返回 null
-                    return null;
-                }
-                count++;
-                matrixObjects[i + 1, j + 1] = gridObjects[newRow, newCol];
-                
-                // 你可以使用 gridObjects[newRow, newCol].gridPosition 获得一个vector2int格式的object坐标位置
-            }
-        }
+                    if (startRow + size > gridStates.GetLength(0) || startCol + size > gridStates.GetLength(1))
+                    {
+                        break; // 超出边界，不再检查更大的矩阵
+                    }
 
-        return matrixObjects; // 所有单元格都是 Occupied，返回对象矩阵
-    }
-
-    public GridPlaceableObject[,] Check4x4MatrixFrom3x3(GridPlaceableObject[,] i3x3Matrix)
-    {
-        if (i3x3Matrix.GetLength(0) != 3 || i3x3Matrix.GetLength(1) != 3)
-        {
-            // 输入矩阵不是 3x3 大小
-            return null;
-        }
-
-        // 获取中心对象的网格位置
-        Vector2Int centerPosition = i3x3Matrix[1, 1].gridPosition;
-        int row = centerPosition.x;
-        int col = centerPosition.y;
-
-        // 检查四个方向的 4x4 矩阵
-        for (int xOffset = -1; xOffset <= 0; xOffset++)
-        {
-            for (int yOffset = -1; yOffset <= 0; yOffset++)
-            {
-                if (Is4x4MatrixOccupied(row + xOffset, col + yOffset))
-                {
-                    return Extract4x4Matrix(row + xOffset, col + yOffset);
+                    if (row >= startRow && row < startRow + size && col >= startCol && col < startCol + size)
+                    {
+                        if (IsMatrixOccupied(startRow, startCol, size) && size > largestSize)
+                        {
+                            largestSize = size;
+                            largestMatrix = ExtractMatrix(startRow, startCol, size);
+                        }
+                    }
                 }
             }
         }
 
-        return null; // 没有找到完整的 4x4 矩阵
+        return largestMatrix;
     }
 
-    private bool Is4x4MatrixOccupied(int startRow, int startCol)
+
+    private bool IsMatrixOccupied(int startRow, int startCol, int size)
     {
-        if (startRow < 0 || startCol < 0 || startRow > gridStates.GetLength(0) - 4 || startCol > gridStates.GetLength(1) - 4)
+        if (startRow < 0 || startCol < 0 || startRow + size > gridStates.GetLength(0) || startCol + size > gridStates.GetLength(1))
         {
             return false;
         }
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < size; i++)
         {
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < size; j++)
             {
                 if (gridStates[startRow + i, startCol + j] != GridState.Occupied)
                 {
@@ -163,13 +134,13 @@ public class GridDataManager : SerializedMonoBehaviour
         return true;
     }
 
-    private GridPlaceableObject[,] Extract4x4Matrix(int startRow, int startCol)
+    private GridPlaceableObject[,] ExtractMatrix(int startRow, int startCol, int size)
     {
-        GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[4, 4];
+        GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[size, size];
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < size; i++)
         {
-            for (int j = 0; j < 4; j++)
+            for (int j = 0; j < size; j++)
             {
                 matrixObjects[i, j] = gridObjects[startRow + i, startCol + j];
             }
@@ -177,7 +148,5 @@ public class GridDataManager : SerializedMonoBehaviour
 
         return matrixObjects;
     }
-
-
 
 }
