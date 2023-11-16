@@ -19,9 +19,6 @@ public class GridManager : MonoBehaviour
         collider.center = new Vector3(gridSize.x / 2f, 0f, gridSize.y / 2f);
         gameObject.layer = 8;
 
-        // 初始化GridDataManager和GridDisplayManager
-        gridDataManager = gameObject.AddComponent<GridDataManager>();
-        gridDisplayManager = gameObject.AddComponent<GridDisplayManager>();
     }
 
     public void ApplySettings(GridSettings settings)

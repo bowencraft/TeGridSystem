@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using Sirenix.OdinInspector.Editor;
+using System;
+using Sirenix.Serialization;
 
-public class GridDataManager : MonoBehaviour
+public class GridDataManager : SerializedMonoBehaviour
 {
-
     public enum GridState
     {
         Placeable, // 可放置
@@ -13,8 +16,10 @@ public class GridDataManager : MonoBehaviour
         Merged
     }
 
-
+    [TableMatrix(HorizontalTitle = "Grid States")]
     public GridState[,] gridStates;
+
+    [TableMatrix(HorizontalTitle = "Grid Objects", SquareCells = true)]
     public GridPlaceableObject[,] gridObjects;
 
     public GridManager gridManager;
@@ -24,10 +29,10 @@ public class GridDataManager : MonoBehaviour
 
     void Start()
     {
-        gridManager = GetComponent<GridManager>();
         gridDisplayManager = gridManager.gridDisplayManager;
         // 初始化 gridStates，例如：
         unlockRadius = 2;
+
 
         gridStates = new GridState[gridManager.gridSize.x, gridManager.gridSize.y]; // 假设网格大小为 10x10
         gridObjects = new GridPlaceableObject[gridManager.gridSize.x, gridManager.gridSize.y];
@@ -76,48 +81,35 @@ public class GridDataManager : MonoBehaviour
     }
 
 
-    public bool IsInMatrix(int row, int col, int matrixSize)
+    public GridPlaceableObject[,] Check3x3Matrix(int row, int col)
     {
-        int rows = gridStates.GetLength(0);
-        int cols = gridStates.GetLength(1);
-
-        string matrixBorder = "";
-
-        for (int i = -matrixSize / 2; i <= matrixSize / 2; i++)
+        if (row < 1 || col < 1 || row >= gridStates.GetLength(0) - 1 || col >= gridStates.GetLength(1) - 1)
         {
-            for (int j = -matrixSize / 2; j <= matrixSize / 2; j++)
+            // 超出边界或不能形成一个完整的 3x3 矩阵
+            return null;
+        }
+
+        GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[3, 3];
+        int count = 0;
+
+        for (int i = -1; i <= 1; i++)
+        {
+            for (int j = -1; j <= 1; j++)
             {
                 int newRow = row + i;
                 int newCol = col + j;
 
-                matrixBorder += newRow + "," + newCol;
-
-                if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols || gridStates[newRow, newCol] != GridState.Occupied)
+                if (gridStates[newRow, newCol] != GridState.Occupied)
                 {
-                    Debug.Log(matrixBorder);
-                    return false;
+                    // 如果任何单元格不是 Occupied，返回 null
+                    return null;
                 }
+                count++;
+                matrixObjects[i + 1, j + 1] = gridObjects[newRow, newCol];
             }
         }
-        //Debug.Log(matrixBorder);
 
-        return true;
+        return matrixObjects; // 所有单元格都是 Occupied，返回对象矩阵
     }
 
-    public GridPlaceableObject[,] Check3x3Matrix(int row, int col)
-    {
-        if (IsInMatrix(row, col, 3))
-        {
-            GridPlaceableObject[,] matrixObjects = new GridPlaceableObject[3, 3];
-            for (int i = -1; i <= 1; i++)
-            {
-                for (int j = -1; j <= 1; j++)
-                {
-                    matrixObjects[i + 1, j + 1] = gridObjects[row + i, col + j];
-                }
-            }
-            return matrixObjects;
-        }
-        return null;
-    }
 }

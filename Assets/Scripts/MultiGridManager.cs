@@ -27,6 +27,19 @@ public class MultiGridManager : MonoBehaviour
         // 实例化网格预制体
         GameObject gridObj = new GameObject(settings.name);
         GridManager gridManager = gridObj.AddComponent<GridManager>();
+
+        GridDataManager dataManager = new GameObject(settings.name + " - Data Manager").AddComponent<GridDataManager>();
+        GridDisplayManager displayManager = new GameObject(settings.name + " - Display Manager").AddComponent<GridDisplayManager>();
+
+        displayManager.transform.SetParent(gridManager.transform);
+        dataManager.transform.SetParent(gridManager.transform);
+
+        displayManager.gridManager = gridManager;
+        dataManager.gridManager = gridManager;
+
+        gridManager.gridDisplayManager = displayManager;
+        gridManager.gridDataManager = dataManager;
+
         gridManager.ApplySettings(settings);
 
         gridManager.multiGridManager = this;

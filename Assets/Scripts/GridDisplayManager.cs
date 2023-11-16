@@ -6,7 +6,7 @@ using static GridDataManager;
 public class GridDisplayManager : MonoBehaviour
 {
     private GridDataManager dataManager;
-    private GridManager gridManager;
+    public GridManager gridManager;
     private MultiGridManager multiGridManager;
 
     public Sprite placeableSprite; // 可放置状态的 Sprite
@@ -17,9 +17,7 @@ public class GridDisplayManager : MonoBehaviour
 
     private void Start()
     {
-        gridManager = GetComponent<GridManager>();
         dataManager = gridManager.gridDataManager;
-        Debug.Log("Display State at start: " + dataManager);
         multiGridManager = gridManager.multiGridManager;
 
         placeableSprite = multiGridManager.placeableSprite;
@@ -90,8 +88,7 @@ public class GridDisplayManager : MonoBehaviour
     public void DisplayGridState(int x, int y, GridState newState)
     {
         if (dataManager == null)
-            dataManager = GetComponent<GridDataManager>();
-        Debug.Log("Display State: " + dataManager);
+            dataManager = gridManager.gridDataManager;
         int index = x * dataManager.gridStates.GetLength(1) + y ;
         if (index >= 0 && index < gridSprites.Count)
         {

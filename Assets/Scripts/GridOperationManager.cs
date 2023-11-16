@@ -12,12 +12,19 @@ public class GridOperationManager : MonoBehaviour
     public bool isInPlacementMode = false;
     public int unlockRadius;
 
+    private GameObject placedObjects;
+
     public void Start()
     {
         if (objectPreview != null)
         {
             objectPreview = Instantiate(objectPreview);
             objectPreview.SetActive(false);
+        }
+        placedObjects = GameObject.Find("PlacedObjects");
+        if (placedObjects == null)
+        {
+            placedObjects = new GameObject("PlacedObjects");
         }
     }
 
@@ -28,6 +35,8 @@ public class GridOperationManager : MonoBehaviour
             isInPlacementMode = true;
             currentGridManager = gridManager;
             currentObject = Instantiate(placeableObject);
+            currentObject.name = "Placed - " + currentObject.name;
+            currentObject.transform.SetParent(placedObjects.transform);
             currentObject.gameObject.SetActive(false);
 
             // 创建或更新物品预览
@@ -65,6 +74,9 @@ public class GridOperationManager : MonoBehaviour
         if (CanPlace())
         {
             Vector2Int gridPosition = currentGridManager.GetGridPositionFromMouse().Value;
+
+            currentObject.gridPosition = gridPosition;
+
             currentObject.transform.position = currentGridManager.GridToWorldPosition(gridPosition);
             currentObject.gameObject.SetActive(true);
             currentGridManager.gridDataManager.UpdateGridState(gridPosition.x, gridPosition.y, GridState.Occupied);
@@ -77,9 +89,16 @@ public class GridOperationManager : MonoBehaviour
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    matrixObjects = currentGridManager.gridDataManager.Check3x3Matrix(gridPosition.x + i - 1, gridPosition.y + j + 1);
-                    Debug.Log("Click On:" + gridPosition+  " " + (gridPosition.x + i) + " " + (gridPosition.y + j));
-                    if (matrixObjects != null) break;
+                    matrixObjects = currentGridManager.gridDataManager.Check3x3Matrix(gridPosition.x + i, gridPosition.y + j);
+                    //Debug.Log("Click On:" + gridPosition+  " " + (gridPosition.x + i) + " " + (gridPosition.y + j));
+                    if (matrixObjects != null) {
+                        break;
+                    }
+                }
+
+                if (matrixObjects != null)
+                {
+                    break;
                 }
             }
 
@@ -94,7 +113,7 @@ public class GridOperationManager : MonoBehaviour
                         GameObject matrixObject = matrixObjects[i, j].gameObject;
 
                         matrixObject.transform.GetChild(0).GetComponent<Renderer>().material = finishedMaterial;
-                        currentGridManager.gridDataManager.UpdateGridState(gridPosition.x + i - 1, gridPosition.y + j - 1, GridState.Merged);
+                        currentGridManager.gridDataManager.UpdateGridState(matrixObjects[i, j].gridPosition.x, matrixObjects[i, j].gridPosition.y, GridState.Merged);
 
                     }
                 }
