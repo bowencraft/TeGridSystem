@@ -6,5 +6,7 @@ public class GridSettings : ScriptableObject
 {
     public Vector2Int gridSize;
     public Vector3 gridPosition;
+
+    public int unlockableBorder;
 }
 

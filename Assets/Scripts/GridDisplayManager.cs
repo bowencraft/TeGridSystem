@@ -8,7 +8,6 @@ public class GridDisplayManager : MonoBehaviour
     private GridDataManager dataManager;
     private GridManager gridManager;
     private MultiGridManager multiGridManager;
-    private SpriteRenderer gridRenderer;
 
     public Sprite placeableSprite; // 可放置状态的 Sprite
     public Sprite occupiedSprite;  // 已放置状态的 Sprite
@@ -16,10 +15,11 @@ public class GridDisplayManager : MonoBehaviour
 
     private List<GameObject> gridSprites = new List<GameObject>(); // 存储所有 Sprite 的列表
 
-    void Awake()
+    private void Start()
     {
-        dataManager = GetComponent<GridDataManager>();
         gridManager = GetComponent<GridManager>();
+        dataManager = gridManager.gridDataManager;
+        Debug.Log("Display State at start: " + dataManager);
         multiGridManager = gridManager.multiGridManager;
 
         placeableSprite = multiGridManager.placeableSprite;
@@ -89,6 +89,9 @@ public class GridDisplayManager : MonoBehaviour
 
     public void DisplayGridState(int x, int y, GridState newState)
     {
+        if (dataManager == null)
+            dataManager = GetComponent<GridDataManager>();
+        Debug.Log("Display State: " + dataManager);
         int index = x * dataManager.gridStates.GetLength(1) + y ;
         if (index >= 0 && index < gridSprites.Count)
         {

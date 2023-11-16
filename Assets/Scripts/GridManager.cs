@@ -4,6 +4,7 @@ using static GridDataManager;
 public class GridManager : MonoBehaviour
 {
     public Vector2Int gridSize; // 网格的大小
+    public int unlockableBorder;
 
     public GridDataManager gridDataManager;
     public GridDisplayManager gridDisplayManager;
@@ -26,7 +27,8 @@ public class GridManager : MonoBehaviour
     public void ApplySettings(GridSettings settings)
     {
         // 应用设置，比如设置网格的大小、位置等
-        gridSize = settings.gridSize;
+        unlockableBorder = settings.unlockableBorder;
+        gridSize = new Vector2Int(settings.gridSize.x + unlockableBorder, settings.gridSize.y + unlockableBorder);
         transform.position = settings.gridPosition;
     }
 

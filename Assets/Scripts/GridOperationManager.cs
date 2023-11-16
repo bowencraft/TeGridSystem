@@ -10,6 +10,7 @@ public class GridOperationManager : MonoBehaviour
     public GameObject objectPreview;
 
     public bool isInPlacementMode = false;
+    public int unlockRadius;
 
     public void Start()
     {
@@ -58,7 +59,6 @@ public class GridOperationManager : MonoBehaviour
 
     public Material finishedMaterial;
 
-    public int unlockRadius = 2;
 
     public void ConfirmPlacement()
     {
@@ -98,8 +98,8 @@ public class GridOperationManager : MonoBehaviour
 
                     }
                 }
-                currentGridManager.gridDataManager.UpdateWithoutCoverGridState(unlockRadius);
-                unlockRadius -= 1;
+                currentGridManager.unlockableBorder -= 1;
+                currentGridManager.gridDataManager.UpdateWithoutCoverGridState(currentGridManager.unlockableBorder);
             }
             else
             {

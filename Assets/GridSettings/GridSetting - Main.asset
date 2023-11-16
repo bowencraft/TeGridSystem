@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9403504200a804d4588a000d5218a6b3, type: 3}
   m_Name: GridSetting - Main
   m_EditorClassIdentifier: 
-  gridSize: {x: 20, y: 20}
+  gridSize: {x: 10, y: 10}
   gridPosition: {x: 0, y: 0, z: 0}
+  unlockableBorder: 2

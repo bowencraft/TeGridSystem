@@ -17,14 +17,18 @@ public class GridDataManager : MonoBehaviour
     public GridState[,] gridStates;
     public GridPlaceableObject[,] gridObjects;
 
-    public GridDisplayManager gridDisplayManager;
     public GridManager gridManager;
+    public GridDisplayManager gridDisplayManager;
+
+    public int unlockRadius; 
 
     void Start()
     {
-        gridDisplayManager = GetComponent<GridDisplayManager>();
         gridManager = GetComponent<GridManager>();
+        gridDisplayManager = gridManager.gridDisplayManager;
         // 初始化 gridStates，例如：
+        unlockRadius = 2;
+
         gridStates = new GridState[gridManager.gridSize.x, gridManager.gridSize.y]; // 假设网格大小为 10x10
         gridObjects = new GridPlaceableObject[gridManager.gridSize.x, gridManager.gridSize.y];
 
@@ -37,17 +41,21 @@ public class GridDataManager : MonoBehaviour
         }
 
 
-        UpdateWithoutCoverGridState(2);
+        UpdateWithoutCoverGridState(unlockRadius);
     }
 
     public void UpdateWithoutCoverGridState(int borderRadius)
     {
-        for (int x = borderRadius -1; x < gridStates.GetLength(0) - borderRadius; x++)
+        //Debug.Log("Updated: " + borderRadius);
+        if (borderRadius >= 0)
         {
-            for (int y = borderRadius -1; y < gridStates.GetLength(1) - borderRadius; y++)
+            for (int x = borderRadius; x < gridStates.GetLength(0) - borderRadius; x++)
             {
-                if (gridStates[x, y] == GridState.Locked)
-                    UpdateGridState(x, y, GridState.Placeable);
+                for (int y = borderRadius; y < gridStates.GetLength(1) - borderRadius; y++)
+                {
+                    if (gridStates[x, y] == GridState.Locked)
+                        UpdateGridState(x, y, GridState.Placeable);
+                }
             }
         }
     }
