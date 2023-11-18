@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static GridDataManager;
 
@@ -12,7 +13,7 @@ public class GridOperationManager : MonoBehaviour
     public GameObject objectPreview;
 
     public bool isInPlacementMode = false;
-    public bool isMultipleObjects = false;
+    public bool isMultipleObjects;
 
     public int unlockRadius;
 
@@ -40,10 +41,11 @@ public class GridOperationManager : MonoBehaviour
     {
         if (!isInPlacementMode)
         {
+            isMultipleObjects = false;
             isInPlacementMode = true;
             currentGridManager = gridManager;
             currentObject = Instantiate(placeableObject).gameObject;
-            currentObject.name = "Placed - " + currentObject.name;
+            currentObject.name = "Placing - " + currentObject.name;
             currentObject.transform.SetParent(placedObjects.transform);
             currentObject.gameObject.SetActive(false);
 
@@ -70,14 +72,15 @@ public class GridOperationManager : MonoBehaviour
     {
         if (!isInPlacementMode)
         {
+            isMultipleObjects = true;
             isInPlacementMode = true;
             currentGridManager = gridManager;
-            currentObject = Instantiate(placeableObjects).gameObject;
-            currentObject.name = "Placed - " + currentObject.name;
+            currentObject = Instantiate(placeableObjects.gameObject);
+            currentObject.name = "Placing - " + currentObject.name;
             currentObject.transform.SetParent(placedObjects.transform);
             currentObject.gameObject.SetActive(false);
 
-            multiPlaceableObjects = placeableObjects;
+            multiPlaceableObjects = currentObject.GetComponent<GridPlaceableMultiObjects>();
 
             // 创建或更新物品预览
             if (objectPreview == null)
@@ -99,15 +102,37 @@ public class GridOperationManager : MonoBehaviour
 
     private bool CanPlace()
     {
-        // check if isMultipleObjects, if so, check if each block is placeable
+        Vector2Int? gridPosition = (currentGridManager != null) ? currentGridManager.GetGridPositionFromMouse() : null;
+        if (!gridPosition.HasValue)
+        {
+            return false;
+        }
 
-        Vector2Int? gridPosition = (currentGridManager != null)?currentGridManager.GetGridPositionFromMouse():null;
-        if (gridPosition.HasValue)
+        if (isMultipleObjects && multiPlaceableObjects != null)
+        {
+            for (int i=0; i< multiPlaceableObjects.objects.GetLength(0); i++) {
+
+                for (int j = 0; j < multiPlaceableObjects.objects.GetLength(1); j++)
+                {
+                    if (multiPlaceableObjects.objects[i,j] != null)
+                    {
+                        Vector2Int objPosition = gridPosition.Value + new Vector2Int(i, j);
+                        if (!currentGridManager.CanPlaceAtPosition(objPosition))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+        else
         {
             return currentGridManager.CanPlaceAtPosition(gridPosition.Value);
         }
-        return false;
     }
+
 
     public Material finishedMaterial;
 
@@ -118,30 +143,38 @@ public class GridOperationManager : MonoBehaviour
         {
             Vector2Int gridPosition = currentGridManager.GetGridPositionFromMouse().Value;
 
-            if (isMultipleObjects)
+            if (isMultipleObjects && multiPlaceableObjects != null)
             {
-                // assume mouse is at 0,0 of multiPlaceableObjects.objects;
-                // set each gridPosition of placeableObject in the multiPlaceableObjects.objects
+                currentObject.transform.position = currentGridManager.GridToWorldPosition(gridPosition);
+                currentObject.gameObject.SetActive(true);
+                for (int i = 0; i < multiPlaceableObjects.objects.GetLength(0); i++)
+                {
+
+                    for (int j = 0; j < multiPlaceableObjects.objects.GetLength(1); j++)
+                    {
+                        GridPlaceableObject obj = multiPlaceableObjects.objects[i, j];
+
+                        if (obj != null)
+                        {
+                            Vector2Int objPosition = gridPosition + new Vector2Int(i, j);
+                            //GameObject objGameObject = Instantiate(obj.gameObject);
+                            //objGameObject.transform.position = currentGridManager.GridToWorldPosition(objPosition) + obj.transform.localPosition - new Vector3(i,0,j);
+                            //objGameObject.gameObject.SetActive(true);
+
+                            obj.gridPosition = objPosition;
+                            currentGridManager.gridDataManager.UpdateGridState(objPosition.x, objPosition.y, GridState.Occupied);
+                            currentGridManager.gridDataManager.gridObjects[objPosition.x, objPosition.y] = obj;
+                        }
+                    }
+                }
             }
             else
             {
-                //currentObject.gridPosition = gridPosition;
+                currentObject.transform.position = currentGridManager.GridToWorldPosition(gridPosition);
+                currentObject.gameObject.SetActive(true);
+                currentGridManager.gridDataManager.UpdateGridState(gridPosition.x, gridPosition.y, GridState.Occupied);
+                currentGridManager.gridDataManager.gridObjects[gridPosition.x, gridPosition.y] = singlePlaceableObject;
             }
-
-            currentObject.transform.position = currentGridManager.GridToWorldPosition(gridPosition);
-            currentObject.gameObject.SetActive(true);
-            currentGridManager.gridDataManager.UpdateGridState(gridPosition.x, gridPosition.y, GridState.Occupied);
-
-
-            if (isMultipleObjects)
-            {
-                // put each placeableObject into currentGridManager.gridDataManager.gridObjects from the multiPlaceableObjects.objects
-            }
-            else
-            {
-                //currentGridManager.gridDataManager.gridObjects[gridPosition.x, gridPosition.y] = currentObject;
-            }
-
 
             GridPlaceableObject[,] matrixObjects = currentGridManager.gridDataManager.CheckMatrix(gridPosition.x, gridPosition.y);
 
@@ -155,7 +188,14 @@ public class GridOperationManager : MonoBehaviour
                     {
                         GameObject matrixObject = matrixObjects[i, j].gameObject;
 
-                        matrixObject.transform.GetChild(0).GetComponent<Renderer>().material = finishedMaterial;
+                        Renderer renderer = matrixObject.transform.GetComponentInChildren<Renderer>();
+                        if (renderer != null)
+                        {
+                            renderer.material = finishedMaterial;
+                        } else
+                        {
+                            matrixObject.transform.GetComponent<Renderer>().material = finishedMaterial;
+                        }
                         currentGridManager.gridDataManager.UpdateGridState(matrixObjects[i, j].gridPosition.x, matrixObjects[i, j].gridPosition.y, GridState.Merged);
 
                     }
@@ -194,7 +234,7 @@ public class GridOperationManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
-            EnterPlacementMode(FindObjectOfType<GridManager>(), placeObject.GetComponent<GridPlaceableObject>());
+            EnterPlacementMode(FindObjectOfType<GridManager>(), placeObject.GetComponent<GridPlaceableMultiObjects>());
 
         if (Input.GetMouseButtonDown(0) && CanPlace())
             ConfirmPlacement();

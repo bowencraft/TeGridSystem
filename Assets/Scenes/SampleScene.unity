@@ -496,9 +496,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectPreview: {fileID: 7085663831985433060, guid: 8db40ef63feb849d8a34a9d14903df6e, type: 3}
   isInPlacementMode: 0
+  isMultipleObjects: 0
   unlockRadius: 3
   finishedMaterial: {fileID: 2100000, guid: 356d9f44a51b94bdfb29542d0bb83003, type: 2}
-  placeObject: {fileID: 7085663831985433060, guid: 14622cd4efce64d108ddc2274c851bc2, type: 3}
+  placeObject: {fileID: 7085663831985433060, guid: a7c4e89a5426146159f0b06686f94d2f, type: 3}
 --- !u!4 &1693284679
 Transform:
   m_ObjectHideFlags: 0
