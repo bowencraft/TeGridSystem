@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSize: {x: 10, y: 10}
   gridPosition: {x: 0, y: 0, z: 0}
-  unlockableBorder: 2
+  unlockableBorder: 5

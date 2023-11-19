@@ -31,7 +31,7 @@ public class GridDataManager : SerializedMonoBehaviour
     {
         gridDisplayManager = gridManager.gridDisplayManager;
         // 初始化 gridStates，例如：
-        unlockRadius = 2;
+        unlockRadius = gridManager.unlockableBorder;
 
 
         gridStates = new GridState[gridManager.gridSize.x, gridManager.gridSize.y]; // 假设网格大小为 10x10

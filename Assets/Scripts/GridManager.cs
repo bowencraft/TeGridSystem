@@ -6,6 +6,8 @@ public class GridManager : MonoBehaviour
     public Vector2Int gridSize; // 网格的大小
     public int unlockableBorder;
 
+    public GridSettings gridSettings;
+
     public GridDataManager gridDataManager;
     public GridDisplayManager gridDisplayManager;
     public MultiGridManager multiGridManager;
@@ -25,7 +27,7 @@ public class GridManager : MonoBehaviour
     {
         // 应用设置，比如设置网格的大小、位置等
         unlockableBorder = settings.unlockableBorder;
-        gridSize = new Vector2Int(settings.gridSize.x + unlockableBorder, settings.gridSize.y + unlockableBorder);
+        gridSize = new Vector2Int(settings.gridSize.x + unlockableBorder * 2, settings.gridSize.y + unlockableBorder * 2);
         transform.position = settings.gridPosition;
     }
 

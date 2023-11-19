@@ -37,6 +37,8 @@ public class MultiGridManager : MonoBehaviour
         displayManager.gridManager = gridManager;
         dataManager.gridManager = gridManager;
 
+        gridManager.gridSettings = settings;
+
         gridManager.gridDisplayManager = displayManager;
         gridManager.gridDataManager = dataManager;
 
