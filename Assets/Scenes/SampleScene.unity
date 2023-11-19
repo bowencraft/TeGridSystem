@@ -689,7 +689,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03bc9e3d143914ed7a98deadf6decc12, type: 3}
   m_Name: 
@@ -802,10 +802,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 7085663831985433060, guid: 3d47f6455f6e54bc2a5ec3da67822cec, type: 3}
-  - {fileID: 7085663831985433060, guid: 48bffe80c6b9f4bdea59bdf44120c8cc, type: 3}
   - {fileID: 7085663831985433060, guid: 6a2544016fc224e208c6e0cebe2a6872, type: 3}
-  - {fileID: 7085663831985433060, guid: 14622cd4efce64d108ddc2274c851bc2, type: 3}
+  - {fileID: 7085663831985433060, guid: a7c4e89a5426146159f0b06686f94d2f, type: 3}
+  - {fileID: 7085663831985433060, guid: 48bffe80c6b9f4bdea59bdf44120c8cc, type: 3}
+  - {fileID: 7085663831985433060, guid: d64ceb98a624d45578ecc7937854390c, type: 3}
+  - {fileID: 7085663831985433060, guid: 3d47f6455f6e54bc2a5ec3da67822cec, type: 3}
+  - {fileID: 7085663831985433060, guid: 92f52b5d483fe47b3bf8d34ced4357c0, type: 3}
   stackParent: {fileID: 996200744}
   offset: 1.5
   stackAmount: 10
