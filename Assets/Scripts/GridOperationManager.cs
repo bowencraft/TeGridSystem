@@ -18,9 +18,13 @@ public class GridOperationManager : MonoBehaviour
 
     private GameObject placedObjects;
 
+    private PrefabStack prefabStack;
 
-    private GridPlaceableObject singlePlaceableObject;
+    //private GridPlaceableObject singlePlaceableObject;
     private GridPlaceableMultiObjects multiPlaceableObjects;
+
+    public Material finishedMaterial;
+    public Material previewedMaterial;
 
     public void Start()
     {
@@ -34,6 +38,11 @@ public class GridOperationManager : MonoBehaviour
         {
             placedObjects = new GameObject("PlacedObjects");
         }
+
+        prefabStack = GetComponent<PrefabStack>();
+
+
+        //EnterPlacementMode(FindObjectOfType<GridManager>(), prefabStack.Pop());
     }
 
     //public void EnterPlacementMode(GridManager gridManager, GridPlaceableObject placeableObject)
@@ -67,9 +76,11 @@ public class GridOperationManager : MonoBehaviour
     //    }
     //}
 
+    private Dictionary<Renderer, Material> originalMaterials = new Dictionary<Renderer, Material>();
+
     public void EnterPlacementMode(GridManager gridManager, GridPlaceableMultiObjects placeableObjects)
     {
-        if (!isInPlacementMode)
+        if (!isInPlacementMode && placeableObjects != null)
         {
             isMultipleObjects = true;
             isInPlacementMode = true;
@@ -92,10 +103,32 @@ public class GridOperationManager : MonoBehaviour
                 objectPreview.SetActive(true);
                 objectPreview.transform.position = placeableObjects.transform.position;
             }
+
+            //Renderer[] renderers = objectPreview.GetComponentsInChildren<Renderer>();
+            //foreach (Renderer renderer in renderers)
+            //{
+            //    if (renderer != null)
+            //    {
+            //        renderer.material = previewedMaterial;
+            //    }
+            //}
+
+            Renderer[] renderers = currentObject.GetComponentsInChildren<Renderer>();
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer != null)
+                {
+                    // 保存原始材质
+                    originalMaterials[renderer] = renderer.material;
+
+                    // 替换为新材质
+                    renderer.material = previewedMaterial;
+                }
+            }
         }
         else
         {
-            Debug.Log("Already in placement mode");
+            Debug.Log("Already in placement mode or placeableObjects is null");
         }
     }
 
@@ -134,7 +167,6 @@ public class GridOperationManager : MonoBehaviour
     }
 
 
-    public Material finishedMaterial;
 
 
     public void ConfirmPlacement()
@@ -171,16 +203,29 @@ public class GridOperationManager : MonoBehaviour
                         }
                     }
                 }
-            }
-            else
-            {
-                currentObject.transform.position = currentGridManager.GridToWorldPosition(gridPosition) + new Vector3(0.5f, 0, 0.5f);
-                currentObject.gameObject.SetActive(true);
-                currentGridManager.gridDataManager.UpdateGridState(gridPosition.x, gridPosition.y, GridState.Occupied);
-                currentGridManager.gridDataManager.gridObjects[gridPosition.x, gridPosition.y] = singlePlaceableObject;
 
-                matrixObjects = currentGridManager.gridDataManager.CheckMatrix(gridPosition.x, gridPosition.y);
+
+                foreach (var item in originalMaterials)
+                {
+                    if (item.Key != null)
+                    {
+                        item.Key.material = item.Value;
+                    }
+                }
+
+                // 清除字典以释放资源
+                originalMaterials.Clear();
+
             }
+            //else
+            //{
+            //    currentObject.transform.position = currentGridManager.GridToWorldPosition(gridPosition) + new Vector3(0.5f, 0, 0.5f);
+            //    currentObject.gameObject.SetActive(true);
+            //    currentGridManager.gridDataManager.UpdateGridState(gridPosition.x, gridPosition.y, GridState.Occupied);
+            //    currentGridManager.gridDataManager.gridObjects[gridPosition.x, gridPosition.y] = singlePlaceableObject;
+
+            //    matrixObjects = currentGridManager.gridDataManager.CheckMatrix(gridPosition.x, gridPosition.y);
+            //}
 
 
 
@@ -193,14 +238,22 @@ public class GridOperationManager : MonoBehaviour
                     {
                         GameObject matrixObject = matrixObjects[i, j].gameObject;
 
-                        Renderer renderer = matrixObject.transform.GetComponentInChildren<Renderer>();
-                        if (renderer != null)
+                        Renderer[] renderers = matrixObject.GetComponentsInChildren<Renderer>();
+                        foreach (Renderer renderer in renderers)
                         {
-                            renderer.material = finishedMaterial;
-                        } else
-                        {
-                            matrixObject.transform.GetComponent<Renderer>().material = finishedMaterial;
+                            if (renderer != null)
+                            {
+                                renderer.material = finishedMaterial;
+                            }
                         }
+
+                        //if (renderer != null)
+                        //{
+                        //    renderer.material = finishedMaterial;
+                        //} else
+                        //{
+                        //    matrixObject.transform.GetComponent<Renderer>().material = finishedMaterial;
+                        //}
                         currentGridManager.gridDataManager.UpdateGridState(matrixObjects[i, j].gridPosition.x, matrixObjects[i, j].gridPosition.y, GridState.Merged);
 
                     }
@@ -212,10 +265,12 @@ public class GridOperationManager : MonoBehaviour
 
             // 退出放置模式
             ExitPlacementMode();
+
+            EnterPlacementMode(FindObjectOfType<GridManager>(), prefabStack.Pop());
         }
     }
 
-    public GameObject placeObject;
+    //public GameObject placeObject;
 
     void Update()
     {
@@ -239,7 +294,16 @@ public class GridOperationManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
-            EnterPlacementMode(FindObjectOfType<GridManager>(), placeObject.GetComponent<GridPlaceableMultiObjects>());
+        {
+            if (!isInPlacementMode)
+            {
+                EnterPlacementMode(FindObjectOfType<GridManager>(), prefabStack.Pop());
+            }
+            else
+            {
+                Debug.Log("Already in placement mode!");
+            }
+        }
 
         if (Input.GetMouseButtonDown(0) && CanPlace())
             ConfirmPlacement();
@@ -296,6 +360,7 @@ public class GridOperationManager : MonoBehaviour
         currentObject = null;
         currentGridManager = null;
         isInPlacementMode = false;
+
     }
 
 

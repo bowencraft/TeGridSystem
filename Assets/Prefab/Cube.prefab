@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3827827516364664089}
   - component: {fileID: 5312932081535108944}
   - component: {fileID: 8581843361436182414}
+  - component: {fileID: 693885587323797250}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -28,10 +29,11 @@ Transform:
   m_GameObject: {fileID: 1072166798393320128}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7206597447808793325}
   m_Father: {fileID: 3653738667031960714}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3827827516364664089
@@ -105,6 +107,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &693885587323797250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072166798393320128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cf27a8f2d33e4063aee6dc5859348b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridPosition: {x: 0, y: 0}
+  offsetPosition: {x: 0, y: 0}
 --- !u!1 &7085663831985433060
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3653738667031960714}
-  - component: {fileID: 6840004363496055957}
+  - component: {fileID: 429406895198805290}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -136,10 +152,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6651665257182275978}
-  - {fileID: 7206597447808793325}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6840004363496055957
+--- !u!114 &429406895198805290
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,30 +163,165 @@ MonoBehaviour:
   m_GameObject: {fileID: 7085663831985433060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cf27a8f2d33e4063aee6dc5859348b5, type: 3}
+  m_Script: {fileID: 11500000, guid: dd4aa95524a664a9ca7c47ead960ef3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectHeightPosition: {fileID: 0}
-  gridPosition: {x: 0, y: 0}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 1072166798393320128}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: objects
+      Entry: 7
+      Data: 0|GridPlaceableObject[,], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 16
+    - Name: ranks
+      Entry: 1
+      Data: 4|4
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: objectsG
+      Entry: 7
+      Data: 1|UnityEngine.GameObject[,], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 16
+    - Name: ranks
+      Entry: 1
+      Data: 4|4
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  rotationAngle: 0
 --- !u!1001 &7172056413930020102
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 3653738667031960714}
+    m_TransformParent: {fileID: 6651665257182275978}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: beb3a37142a944d8aad490ef4570cf0a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.518
+      value: 0.018000126
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: beb3a37142a944d8aad490ef4570cf0a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.239
+      value: 0.73899996
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: beb3a37142a944d8aad490ef4570cf0a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.455
+      value: -0.045000076
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: beb3a37142a944d8aad490ef4570cf0a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -201,6 +351,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3737757902984381172, guid: beb3a37142a944d8aad490ef4570cf0a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b2f37ae0b757f4effb4e949dcefab393, type: 2}
     - target: {fileID: 919132149155446097, guid: beb3a37142a944d8aad490ef4570cf0a, type: 3}
       propertyPath: m_Name
       value: house1
