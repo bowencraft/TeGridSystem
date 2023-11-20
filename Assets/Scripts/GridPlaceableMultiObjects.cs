@@ -53,10 +53,10 @@ public class GridPlaceableMultiObjects : SerializedMonoBehaviour
                 {
                     if (rotationAngle == 90)
                     {
-                        objects[i, j].offsetPosition = new Vector2Int(j,i);
+                        objects[i, j].offsetPosition = new Vector2Int(j,-i);
                     } else if (rotationAngle == 180)
                     {
-                        objects[i, j].offsetPosition = new Vector2Int(i,-j); //
+                        objects[i, j].offsetPosition = new Vector2Int(-i,-j); //
                         Debug.Log(rotationAngle + ": " + objects[i, j].offsetPosition + ", " + new Vector2Int(-i, j));
                     } else if (rotationAngle == 270)
                     {

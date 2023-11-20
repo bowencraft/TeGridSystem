@@ -98,14 +98,14 @@ public class CameraController : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         float elevation = 0.0f;
 
-        if (Input.GetKey(KeyCode.Q))
-        {
-            elevation = -1.0f;
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            elevation = 1.0f;
-        }
+        //if (Input.GetKey(KeyCode.Q))
+        //{
+        //    elevation = -1.0f;
+        //}
+        //if (Input.GetKey(KeyCode.E))
+        //{
+        //    elevation = 1.0f;
+        //}
 
         //if (Input.GetMouseButtonDown(1))
         //{

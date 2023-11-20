@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -20,11 +21,19 @@ public class GridOperationManager : MonoBehaviour
 
     private PrefabStack prefabStack;
 
+    [SerializeField]
+    private GameObject noteText;
+
+    [SerializeField]
+    private TextMeshProUGUI scoreText;
+
     //private GridPlaceableObject singlePlaceableObject;
     private GridPlaceableMultiObjects multiPlaceableObjects;
 
     public Material finishedMaterial;
     public Material previewedMaterial;
+
+    public int gameScore;
 
     public void Start()
     {
@@ -232,6 +241,7 @@ public class GridOperationManager : MonoBehaviour
             if (matrixObjects != null)
             {
                 Debug.Log(matrixObjects.Length);
+                gameScore += matrixObjects.Length;
                 for (int i =0; i< matrixObjects.GetLength(0); i++)
                 {
                     for (int j = 0; j < matrixObjects.GetLength(0); j++)
@@ -274,6 +284,16 @@ public class GridOperationManager : MonoBehaviour
 
     void Update()
     {
+        scoreText.text = gameScore.ToString();
+
+        if (isInPlacementMode)
+        {
+            noteText.SetActive(false);
+        } else
+        {
+            noteText.SetActive(true);
+        }
+
         if (currentObject != null)
         {
             Vector2Int? gridPosition = currentGridManager.GetGridPositionFromMouse();
@@ -301,14 +321,14 @@ public class GridOperationManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Already in placement mode!");
+                //Debug.Log("Already in placement mode!");
             }
         }
 
         if (Input.GetMouseButtonDown(0) && CanPlace())
             ConfirmPlacement();
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (isInPlacementMode && isMultipleObjects && multiPlaceableObjects != null)
             {
@@ -327,7 +347,7 @@ public class GridOperationManager : MonoBehaviour
                 // 更新多对象的内部状态
                 multiPlaceableObjects.RotateMatrixRight();
             }
-        } else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        } else if (Input.GetKeyDown(KeyCode.Q))
         {
             if (isInPlacementMode && isMultipleObjects && multiPlaceableObjects != null)
             {

@@ -13,6 +13,11 @@ public class PrefabStack : MonoBehaviour
 
     private List<GameObject> stack = new List<GameObject>();
 
+    public float rotationSpeed = 15.0f; // 每秒旋转的度数
+
+    [SerializeField]
+    private GridOperationManager operationManager;
+
     public void Start()
     {
         InitializeStack(stackAmount);
@@ -20,7 +25,14 @@ public class PrefabStack : MonoBehaviour
 
     public void Update()
     {
-        //stackParent.transform.rotation = 
+        if (stackParent != null)
+        {
+            // 计算每帧的旋转量
+            float rotationThisFrame = rotationSpeed * Time.deltaTime;
+
+            // 旋转 stackParent 的 Y 轴
+            stackParent.transform.Rotate(0, rotationThisFrame, 0, Space.Self);
+        }
     }
 
     // 初始化堆栈
@@ -30,6 +42,8 @@ public class PrefabStack : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             GameObject randomPrefab = prefabs[Random.Range(0, prefabs.Count)]; // 随机选择一个Prefab
+            
+
             GameObject go = Instantiate(randomPrefab, stackParent);
             SetLayer(go.transform.gameObject, 5);
 
@@ -67,6 +81,10 @@ public class PrefabStack : MonoBehaviour
             Destroy(stack[stack.Count - 1]);
             stack.RemoveAt(stack.Count - 1);
             return top;
+        } else
+        {
+            InitializeStack(stackAmount);
+            operationManager.gameScore -= stackAmount;
         }
         return null;
     }
