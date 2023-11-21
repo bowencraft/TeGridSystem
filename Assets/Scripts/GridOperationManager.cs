@@ -35,6 +35,11 @@ public class GridOperationManager : MonoBehaviour
 
     public int gameScore;
 
+    public AudioClip place_sfx;
+    public AudioClip elminate_sfx;
+    public AudioClip rotation_sfx;
+    public AudioClip addscore_sfx;
+
     public void Start()
     {
         if (objectPreview != null)
@@ -180,6 +185,9 @@ public class GridOperationManager : MonoBehaviour
 
     public void ConfirmPlacement()
     {
+        Camera.main.GetComponent<AudioSource>().clip = place_sfx;
+        Camera.main.GetComponent<AudioSource>().Play();
+
         if (CanPlace())
         {
             Vector2Int gridPosition = currentGridManager.GetGridPositionFromMouse().Value;
@@ -321,6 +329,9 @@ public class GridOperationManager : MonoBehaviour
             }
             else
             {
+
+                Camera.main.GetComponent<AudioSource>().clip = elminate_sfx;
+                Camera.main.GetComponent<AudioSource>().Play();
                 //Debug.Log("Already in placement mode!");
             }
         }
@@ -330,6 +341,8 @@ public class GridOperationManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            Camera.main.GetComponent<AudioSource>().clip = rotation_sfx;
+            Camera.main.GetComponent<AudioSource>().Play();
             if (isInPlacementMode && isMultipleObjects && multiPlaceableObjects != null)
             {
                 // 旋转预览对象
@@ -349,6 +362,8 @@ public class GridOperationManager : MonoBehaviour
             }
         } else if (Input.GetKeyDown(KeyCode.Q))
         {
+            Camera.main.GetComponent<AudioSource>().clip = rotation_sfx;
+            Camera.main.GetComponent<AudioSource>().Play();
             if (isInPlacementMode && isMultipleObjects && multiPlaceableObjects != null)
             {
                 // 旋转预览对象
